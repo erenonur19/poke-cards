@@ -1,74 +1,86 @@
 <template>
   <div class="cards">
 
-    <div 
-  v-for="p in pokemons" 
-  :key="p.id"
-  @click="fetchEvolutions(p)"
+    <card
+    v-for="pokemon in pokemons"
+    :key="pokemon.id"
+    @click="fetchEvolutions(pokemon)"
+    :class="{opace:pokemon.id!==selectedId}"
+    class="card"
+     >
+     <template v-slot:title>
+      {{pokemon.name}} #{{pokemon.id}}
+     </template>
+     <template v-slot:content>
+      <img :src="pokemon.sprite"/>
+     </template>
+     <template v-slot:description>
+     <div
+     v-for="type in pokemon.types" 
+     :key="type" >
+     {{type.name}}
 
-  class="card"
-  >
+     </div>
+     
     
-    <div class="title">
-      {{p.name}} #{{p.id}}
-    </div>
 
-    <div class="content">
-      <img :src="p.sprite" />
-    </div>
-
-    <div 
-    v-for="type in p.types" 
-    :key="type.name"
-    class="description">
-    {{type.name}}
-      
-    </div>
-
-  </div>
-
-  <div 
-  v-for="e in evolutions" 
-  :key="e.id"
-
-  class="card"
-  >
     
-    <div class="title">
-      {{e.name}} #{{e.id}}
-    </div>
-
-    <div class="content">
-      <img :src="e.sprite" />
-    </div>
-
-    <div 
-    v-for="type in e.types" 
-    :key="type.name"
-    class="description">
-    {{type.name}}
-      
-    </div>
-
-  </div>
-
-  </div>
+     
+     </template>
+     
+    </card>
   
+  </div>
+
+  <div class="cards">
+
+    <card
+    v-for="pokemon in evolutions"
+    :key="pokemon.id"
+    @click="fetchEvolutions(pokemon)"
+     >
+     <template v-slot:title>
+      {{pokemon.name}} #{{pokemon.id}}
+     </template>
+     <template v-slot:content>
+      <img :src="pokemon.sprite"/>
+     </template>
+     <template v-slot:description>
+     <div
+     v-for="type in pokemon.types" 
+     :key="type" >
+     {{type.name}}
+
+     </div>
+     
+    
+
+    
+     
+     </template>
+     
+    </card>
+  
+  </div>
  
 </template>
 
 
 <script>
-import { ref,reactive,onMounted} from 'vue';
+import Card from './components/Card.vue'
+import { ref,onMounted} from 'vue';
+
 
 export default{
-
+components:{
+  Card
+},
 setup(){
 
   const api='https://pokeapi.co/api/v2/pokemon'
   const ids=[1,4,7]
-  const pokemons=ref(null)
-  const evolutions=ref(null)
+  const pokemons=ref([])
+  const evolutions=ref([])
   const selectedId=ref(null)
 
  onMounted(async()=>{
@@ -124,49 +136,23 @@ setup(){
 
 
 <style scoped>
-.card {
-  border: 1px solid silver;
-  border-radius: 8px;
-  max-width: 200px;
-  margin: 0 5px;
-  cursor: pointer;
-  box-shadow: 0px 1px 3px darkgrey;
-  transition: 0.2s;
-}
-.title, .content, .description {
-  padding: 16px;
-  text-transform: capitalize;
-  text-align: center;
-}
-.title, .content {
-  border-bottom: 1px solid silver;
-}
-.title {
-  font-size: 1.25em;
-}
-.card:hover {
-  transition: 0.2s;
-  box-shadow: 0px 1px 9px darkgrey;
-}
 
-  img {
-  width: 100%;
-  display: block;
-}
 .cards {
   display: flex;
 
   justify-content: center;
   margin-top: 15px;
 }
-.opace {
-  opacity: 0.5;
+
+img {
+  width: 100%;
+  display: block;
 }
-.card:hover {
+.opace{
+  opacity:0.5;
+}
+.card:hover{
   opacity: 1;
-}
-.evolutions{
-  display: flex;
 }
 
 </style>
